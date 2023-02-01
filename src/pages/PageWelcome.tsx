@@ -10,6 +10,7 @@ export const PageWelcome = () => {
     isEditingWelcomeMessage,
     setWelcomeMessage,
     saveWelcomeMsg,
+    deleteFlashcard,
   } = useContext(AppContext);
   return (
     <div className="page pageWelcome">
@@ -43,7 +44,13 @@ export const PageWelcome = () => {
             <div className="flashcard" key={flashCard.id}>
               <span className="front">{flashCard.front}</span>
               <span className="back">{flashCard.back}</span>
-              <div>{adminIsOnline && <button>Delete</button>}</div>
+              <div>
+                {adminIsOnline && (
+                  <button onClick={() => deleteFlashcard(flashCard)}>
+                    Delete
+                  </button>
+                )}
+              </div>
             </div>
           );
         })}

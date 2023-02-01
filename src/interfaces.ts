@@ -17,4 +17,5 @@ export interface IAppContext {
   turnOnWelcomeMessage: () => void;
   isEditingWelcomeMessage: boolean;
   saveWelcomeMsg: () => void;
+  deleteFlashcard: (flashcard: IFlashCard) => void;
 }

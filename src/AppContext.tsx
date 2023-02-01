@@ -22,12 +22,6 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
   };
 
   useEffect(() => {
-    // (async () => {
-    //   const _flashCards: IFlashCard[] = (
-    //     await axios.get(`${backendUrl}/flashcards`)
-    //   ).data;
-    //   setFlashCards(_flashCards);
-    // })();
     loadFlashCards();
   }, []);
 
@@ -80,6 +74,18 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
     }
   };
 
+  const deleteFlashcard = async (flashcard: IFlashCard) => {
+    try {
+      await axios.delete(`${backendUrl}/flashcards/${flashcard.id}`, {
+        withCredentials: true,
+      });
+      const _flashCard = flashCards.filter((m) => m.id !== flashcard.id);
+      setFlashCards(_flashCard);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -90,6 +96,7 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
         isEditingWelcomeMessage,
         setWelcomeMessage,
         saveWelcomeMsg,
+        deleteFlashcard,
       }}
     >
       {children}
