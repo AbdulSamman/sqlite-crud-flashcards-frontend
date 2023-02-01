@@ -1,0 +1,62 @@
+body {
+  background-color: #333;
+  color: #eee;
+  padding: 0 1rem;
+  font-family: "Courier New", Courier, monospace;
+  .App {
+    h1 {
+      color: gold;
+      text-transform: uppercase;
+    }
+    nav {
+      background-color: #222;
+      padding: 0.5rem;
+
+      a {
+        color: #aaa;
+        text-decoration: none;
+        margin-right: 1rem;
+      }
+
+      a.active {
+        color: rgb(211, 201, 99);
+      }
+    }
+
+    button {
+      padding: 0.2rem;
+      margin-left: 1rem;
+    }
+    .pageWelcome {
+      .row {
+        display: flex;
+        align-items: center;
+        height: 80px;
+        input {
+          width: 18rem;
+        }
+      }
+
+      .flashcards {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 1rem;
+        margin: 0.5rem 0.5rem 0.5rem 0;
+        .flashcard {
+          display: flex;
+          flex-wrap: wrap;
+          row-gap: 10px;
+          background-color: #222;
+          padding: 0.5rem;
+          width: 100%;
+          word-break: break-word;
+          .back {
+            color: tomato;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
