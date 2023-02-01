@@ -10,17 +10,25 @@ export const AppContext = createContext<IAppContext>({} as IAppContext);
 
 export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
   const [flashCards, setFlashCards] = useState<IFlashCard[]>([]);
-  const [adminIsOnline, setAdminIsOnline] = useState(false);
+  const [adminIsOnline, setAdminIsOnline] = useState(true);
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [isEditingWelcomeMessage, setIsEditingWelcomeMessage] = useState(false);
 
+  const loadFlashCards = async () => {
+    const _flashCards: IFlashCard[] = (
+      await axios.get(`${backendUrl}/flashcards`)
+    ).data;
+    setFlashCards(_flashCards);
+  };
+
   useEffect(() => {
-    (async () => {
-      const _flashCards: IFlashCard[] = (
-        await axios.get(`${backendUrl}/flashcards`)
-      ).data;
-      setFlashCards(_flashCards);
-    })();
+    // (async () => {
+    //   const _flashCards: IFlashCard[] = (
+    //     await axios.get(`${backendUrl}/flashcards`)
+    //   ).data;
+    //   setFlashCards(_flashCards);
+    // })();
+    loadFlashCards();
   }, []);
 
   useEffect(() => {

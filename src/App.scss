@@ -25,7 +25,6 @@ body {
 
     button {
       padding: 0.2rem;
-      margin-left: 1rem;
     }
     .pageWelcome {
       .row {
@@ -34,6 +33,9 @@ body {
         height: 80px;
         input {
           width: 18rem;
+        }
+        button {
+          margin-left: 1rem;
         }
       }
 
