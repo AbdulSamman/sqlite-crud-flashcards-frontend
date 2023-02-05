@@ -10,6 +10,7 @@ export interface IAppProvider {
 }
 
 export interface IAppContext {
+  appTitle: string;
   flashCards: IFlashCard[];
   adminIsOnline: boolean;
   welcomeMessage: string;
@@ -18,4 +19,10 @@ export interface IAppContext {
   isEditingWelcomeMessage: boolean;
   saveWelcomeMsg: () => void;
   deleteFlashcard: (flashcard: IFlashCard) => void;
+  loginAdmin: (callback: () => void) => void;
+  setPassword: (password: string) => void;
+  logoutAdmin: () => void;
+  appMessage: string;
+  deleteAppMessage: () => void;
+  password: string;
 }

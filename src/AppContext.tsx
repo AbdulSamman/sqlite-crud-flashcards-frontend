@@ -9,10 +9,13 @@ const backendUrl = "http://localhost:4004";
 export const AppContext = createContext<IAppContext>({} as IAppContext);
 
 export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
+  const appTitle = "Info Site";
   const [flashCards, setFlashCards] = useState<IFlashCard[]>([]);
-  const [adminIsOnline, setAdminIsOnline] = useState(true);
+  const [adminIsOnline, setAdminIsOnline] = useState(false);
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [isEditingWelcomeMessage, setIsEditingWelcomeMessage] = useState(false);
+  const [appMessage, setAppMessage] = useState("");
+  const [password, setPassword] = useState("");
 
   const loadFlashCards = async () => {
     const _flashCards: IFlashCard[] = (
@@ -25,35 +28,94 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
     loadFlashCards();
   }, []);
 
+  const loadWelcomeMsg = async () => {
+    const _welcomeMessage: string = (
+      await axios.get(`${backendUrl}/welcomeMessage`)
+    ).data;
+    setWelcomeMessage(_welcomeMessage);
+  };
+
   useEffect(() => {
     (async () => {
-      const _message: string = (await axios.get(`${backendUrl}/welcomeMessage`))
-        .data;
-      setWelcomeMessage(_message);
+      try {
+        const user = (
+          await axios.get(`${backendUrl}/currentuser`, {
+            withCredentials: true,
+          })
+        ).data;
+        if (user === "admin") {
+          setAdminIsOnline(true);
+        }
+      } catch (e: any) {
+        if (e.code !== "ERR_BAD_REQUEST") {
+          const _appMessage = `Sorry, there was an unknown error (${e.code}).`;
+          setAppMessage(_appMessage);
+        }
+      }
     })();
+  }, []);
+
+  useEffect(() => {
+    loadWelcomeMsg();
   }, []);
 
   const turnOnWelcomeMessage = () => {
     setIsEditingWelcomeMessage(true);
   };
 
-  /* 
-    const saveWelcomeMsg = async () => {
+  const deleteAppMessage = () => {
+    setAppMessage("");
+  };
+  // parameter: 1 callback that is called when user is successfully logged in
+  // kann auch 2. callback parameter: 2 callback that is called when user is logged in failed
+  const loginAdmin = async (callback: () => void) => {
+    let _appMessage = "";
     try {
       await axios.post(
-        `${backendUrl}/welcomeMessage`,
-
+        `${backendUrl}/login`,
+        { password: password },
         {
-          message: welcomeMessage,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         }
       );
-      setIsEditingWelcomeMessage(false);
-    } catch (error) {
-      console.log(error);
+      setAdminIsOnline(true);
+      callback();
+    } catch (error: any) {
+      switch (error.code) {
+        case "ERR_BAD_REQUEST":
+          _appMessage =
+            "Sorry, credentials were incorrect, please attempt login again.";
+          break;
+        case "ERR_NETWORK":
+          _appMessage =
+            "Sorry, we aren't able to process your request at this time.";
+          break;
+        default:
+          _appMessage = `Sorry, there was an unknown error (${error.code}).`;
+          break;
+      }
+      setAdminIsOnline(false);
+    }
+    setAppMessage(_appMessage);
+    setPassword("");
+  };
+
+  const logoutAdmin = async () => {
+    try {
+      const user = (
+        await axios.get(`${backendUrl}/logout`, { withCredentials: true })
+      ).data;
+      setAdminIsOnline(false);
+    } catch (error: any) {
+      throw new Error(`There was a problem with the logout: ${error.message}`);
     }
   };
-  */
+
   const saveWelcomeMsg = async () => {
+    let _appMessage = "";
     try {
       await axios.post(
         `${backendUrl}/welcomeMessage`,
@@ -68,21 +130,52 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
           withCredentials: true,
         }
       );
-      setIsEditingWelcomeMessage(false);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      switch (error.code) {
+        case "ERR_BAD_REQUEST":
+          _appMessage =
+            "Sorry, credentials were incorrect, please attempt login again.";
+          break;
+        case "ERR_NETWORK":
+          _appMessage =
+            "Sorry, we aren't able to process your request at this time.";
+          break;
+        default:
+          _appMessage = `Sorry, there was an unknown error (${error.code}).`;
+          break;
+      }
     }
+    setAppMessage(_appMessage);
+    setAdminIsOnline(false);
+    loadWelcomeMsg();
+    setIsEditingWelcomeMessage(false);
   };
 
   const deleteFlashcard = async (flashcard: IFlashCard) => {
+    let _appMessage = "";
     try {
       await axios.delete(`${backendUrl}/flashcards/${flashcard.id}`, {
         withCredentials: true,
       });
-      const _flashCard = flashCards.filter((m) => m.id !== flashcard.id);
+      const _flashCard = flashCards.filter(
+        (m: IFlashCard) => m.id !== flashcard.id
+      );
       setFlashCards(_flashCard);
+      setAppMessage(`flashcard deleted`);
     } catch (error: any) {
-      throw new Error(error);
+      switch (error.code) {
+        case "ERR_BAD_REQUEST":
+          _appMessage =
+            "Sorry, credentials were incorrect, please attempt login again.";
+          break;
+        case "ERR_NETWORK":
+          _appMessage =
+            "Sorry, we aren't able to process your request at this time.";
+          break;
+        default:
+          _appMessage = `Sorry, there was an unknown error (${error.code}).`;
+          break;
+      }
     }
   };
 
@@ -97,6 +190,13 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
         setWelcomeMessage,
         saveWelcomeMsg,
         deleteFlashcard,
+        loginAdmin,
+        setPassword,
+        logoutAdmin,
+        appTitle,
+        appMessage,
+        deleteAppMessage,
+        password,
       }}
     >
       {children}

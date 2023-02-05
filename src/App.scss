@@ -8,6 +8,10 @@ body {
       color: gold;
       text-transform: uppercase;
     }
+    .adminMode {
+      color: #000;
+      text-shadow: 2px 2px #aaa;
+    }
     nav {
       background-color: #222;
       padding: 0.5rem;
@@ -20,6 +24,34 @@ body {
 
       a.active {
         color: rgb(211, 201, 99);
+      }
+    }
+    .appMessage {
+      background-color: rgb(204, 122, 84);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #333;
+      border-radius: 5px;
+      margin-bottom: 1em;
+      width: fit-content;
+      padding: 5px;
+      .messageText {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+        color: #eee;
+      }
+      button {
+        background-color: transparent;
+        border: none;
+        color: gold;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        &:hover {
+          font-size: 20px;
+        }
       }
     }
 
@@ -58,6 +90,20 @@ body {
             width: 100%;
           }
         }
+      }
+    }
+    .pageLogin {
+      padding: 1rem 0;
+      input {
+        width: 7rem;
+
+        outline: none;
+      }
+      input:focus {
+        border: 3px solid skyblue;
+      }
+      button {
+        margin-left: 1rem;
       }
     }
   }

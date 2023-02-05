@@ -8,10 +8,21 @@ import { useContext } from "react";
 import { AppContext } from "./AppContext";
 
 function App() {
-  const { adminIsOnline } = useContext(AppContext);
+  const { adminIsOnline, appMessage, deleteAppMessage } =
+    useContext(AppContext);
   return (
     <div className="App">
-      {adminIsOnline ? <h1>ADMIN MODE </h1> : <h1>SQlite flashcards </h1>}
+      {adminIsOnline ? (
+        <h1 className="adminMode">&lt;ADMIN MODE&gt; </h1>
+      ) : (
+        <h1>SQlite flashcards </h1>
+      )}
+      {appMessage && (
+        <div className="appMessage">
+          <p className="messageText">{appMessage}</p>
+          <button onClick={deleteAppMessage}>X</button>
+        </div>
+      )}
 
       <nav>
         <NavLink to="/welcome">Welcome</NavLink>

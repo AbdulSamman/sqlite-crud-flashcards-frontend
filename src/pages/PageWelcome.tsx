@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { AppContext } from "../AppContext";
-
+import { Helmet } from "react-helmet";
 export const PageWelcome = () => {
   const {
+    appTitle,
     flashCards,
     adminIsOnline,
     welcomeMessage,
@@ -14,6 +15,9 @@ export const PageWelcome = () => {
   } = useContext(AppContext);
   return (
     <div className="page pageWelcome">
+      <Helmet>
+        <title>{appTitle} - Welcome</title>
+      </Helmet>
       <div className="row">
         {!isEditingWelcomeMessage && <p>{welcomeMessage}</p>}
         {adminIsOnline && (
