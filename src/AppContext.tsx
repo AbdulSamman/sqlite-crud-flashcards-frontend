@@ -59,10 +59,6 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
     loadWelcomeMsg();
   }, []);
 
-  const turnOnWelcomeMessage = () => {
-    setIsEditingWelcomeMessage(true);
-  };
-
   const deleteAppMessage = () => {
     setAppMessage("");
   };
@@ -110,10 +106,12 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
       ).data;
       setAdminIsOnline(false);
     } catch (error: any) {
-      throw new Error(`There was a problem with the logout: ${error.message}`);
+      console.log(`There was a problem with the logout: ${error.message}`);
     }
   };
-
+  const turnOnWelcomeMessage = () => {
+    setIsEditingWelcomeMessage(true);
+  };
   const saveWelcomeMsg = async () => {
     let _appMessage = "";
     try {
@@ -130,11 +128,12 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
           withCredentials: true,
         }
       );
+      setIsEditingWelcomeMessage(false);
     } catch (error: any) {
       switch (error.code) {
         case "ERR_BAD_REQUEST":
           _appMessage =
-            "Sorry, credentials were incorrect, please attempt login again.";
+            "Sorry, you had been logged out when you tried to save the welcome message. Please log in again.";
           break;
         case "ERR_NETWORK":
           _appMessage =
@@ -144,11 +143,11 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
           _appMessage = `Sorry, there was an unknown error (${error.code}).`;
           break;
       }
+      setAppMessage(_appMessage);
+      setAdminIsOnline(false);
+      loadWelcomeMsg();
+      setIsEditingWelcomeMessage(false);
     }
-    setAppMessage(_appMessage);
-    setAdminIsOnline(false);
-    loadWelcomeMsg();
-    setIsEditingWelcomeMessage(false);
   };
 
   const deleteFlashcard = async (flashcard: IFlashCard) => {
@@ -166,7 +165,7 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
       switch (error.code) {
         case "ERR_BAD_REQUEST":
           _appMessage =
-            "Sorry, credentials were incorrect, please attempt login again.";
+            "Sorry, you had been logged out when you tried to save the welcome message. Please log in again.";
           break;
         case "ERR_NETWORK":
           _appMessage =

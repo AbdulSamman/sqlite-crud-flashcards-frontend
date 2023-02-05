@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AppContext } from "../AppContext";
 import { Helmet } from "react-helmet";
+
 export const PageWelcome = () => {
   const {
     appTitle,
@@ -13,6 +14,7 @@ export const PageWelcome = () => {
     saveWelcomeMsg,
     deleteFlashcard,
   } = useContext(AppContext);
+
   return (
     <div className="page pageWelcome">
       <Helmet>
